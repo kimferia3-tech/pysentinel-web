@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <title>PySentinel | Security Center</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">P</div>
+            <div>
+                <h2>PySentinel</h2>
+                <span>ENDPOINT SECURITY</span>
+            </div>
+        </div>
+
+        <div class="nav-label">WORKSPACE</div>
+
+        <nav>
+            <button class="nav-item active" data-view="dashboard">
+                <span>◈</span> Dashboard
+            </button>
+            <button class="nav-item" data-view="scan">
+                <span>⌕</span> Scanner
+            </button>
+            <button class="nav-item" data-view="quarantine">
+                <span>▣</span> Quarantine
+            </button>
+            <button class="nav-item" data-view="settings">
+                <span>⚙</span> Settings
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <span class="status-dot"></span>
+            <div>
+                <strong>Application online</strong>
+                <small>Protection not yet active</small>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <span class="eyebrow">SECURITY CENTER</span>
+                <h1 id="page-title">Dashboard</h1>
+            </div>
+            <button id="theme-toggle" class="secondary-btn">
+                ◐ Change theme
+            </button>
+        </header>
+
+        <section class="view active" id="dashboard">
+            <div class="welcome">
+                <div>
+                    <span class="eyebrow">PYSENTINEL / OVERVIEW</span>
+                    <h2>Your security, in one place.</h2>
+                    <p>Inspect files and review your system's security status.</p>
+                </div>
+
+                <div class="shield" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" fill="none">
+                        <path d="M24 4L40 10V21C40 31 33 39 24 44C15 39 8 31 8 21V10L24 4Z" stroke="currentColor"
+                            stroke-width="1.6" stroke-linejoin="round" />
+                        <path d="M17 24L22 29L32 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div>
+
+            </div>
+
+            <div class="security-banner">
+                <div class="security-symbol">!</div>
+                <div>
+                    <strong>Protection is not active yet</strong>
+                    <p>The interface is ready. Scanning and monitoring
+                        will be connected in subsequent steps.</p>
+                </div>
+                <span class="pill warning">SETUP</span>
+            </div>
+
+            <div class="stats-grid">
+                <article class="stat-card">
+                    <span>Files scanned</span>
+                    <strong id="files-scanned">0</strong>
+                    <small>Current session</small>
+                </article>
+                <article class="stat-card">
+                    <span>Threats detected</span>
+                    <strong id="threat-count">0</strong>
+                    <small>Current session</small>
+                </article>
+                <article class="stat-card">
+                    <span>Quarantined items</span>
+                    <strong id="quarantine-count">0</strong>
+                    <small>Isolation ledger</small>
+                </article>
+                <article class="stat-card">
+                    <span>CPU usage</span>
+                    <strong id="cpu-usage">—</strong>
+                    <small>Awaiting backend</small>
+                </article>
+            </div>
+
+            <div class="section-heading">
+                <div>
+                    <h3>Quick scan</h3>
+                    <p>Choose a scan target to inspect.</p>
+                </div>
+            </div>
+
+            <div class="scan-options">
+                <article class="option-card">
+                    <div class="option-icon">⌂</div>
+                    <h3>Quick scan</h3>
+                    <p>Inspect selected common user directories.</p>
+                    <button class="primary-btn scan-action" data-scan="quick">Start quick scan →</button>
+                </article>
+
+                <article class="option-card">
+                    <div class="option-icon">▤</div>
+                    <h3>Custom scan</h3>
+                    <p>Select a folder you want to inspect.</p>
+                    <button class="secondary-btn scan-action" data-scan="custom">Choose folder →</button>
+                </article>
+            </div>
+
+            <div class="section-heading">
+                <div>
+                    <h3>Recent activity</h3>
+                    <p>Security events reported by this application.</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div id="activity-log" class="activity-log">
+                    <p class="empty-state">No scanning events yet.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="view" id="scan">
+            <div class="section-heading">
+                <div>
+                    <h2>File scanner</h2>
+                    <p>Scan accessible files using local detection rules.</p>
+                </div>
+            </div>
+
+            <div class="panel scan-panel">
+                <div class="scan-status-row">
+                    <div>
+                        <span class="eyebrow">CURRENT SCAN</span>
+                        <h3 id="scan-status">Ready to scan</h3>
+                    </div>
+                    <span class="pill" id="scan-percent">0%</span>
+                </div>
+
+                <div class="progress-track">
+                    <div id="scan-progress" class="progress-fill"></div>
+                </div>
+
+                <p id="scan-detail">No scan is running.</p>
+
+                <div class="button-row">
+                    <button class="primary-btn scan-action" data-scan="custom">Choose folder</button>
+                    <button id="cancel-scan" class="danger-btn" disabled>
+                        Cancel scan
+                    </button>
+                </div>
+            </div>
+
+            <div class="section-heading">
+                <h3>Scan events</h3>
+            </div>
+            <div class="panel">
+                <div id="scan-log" class="scan-log">
+                    <p class="empty-state">Waiting for a scan.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="view" id="quarantine">
+            <div class="section-heading">
+                <div>
+                    <h2>Quarantine</h2>
+                    <p>Review isolated files and their recorded detection details.</p>
+                </div>
+            </div>
+
+            <div class="panel table-panel">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File</th>
+                                <th>Detection</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="quarantine-table">
+                            <tr>
+                                <td colspan="4" class="empty-state">
+                                    No quarantine records loaded.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <p class="footnote">Quarantine operations will be connected
+                to the Python backend in a later step.</p>
+        </section>
+
+        <section class="view" id="settings">
+            <div class="section-heading">
+                <div>
+                    <h2>Settings</h2>
+                    <p>Configure the application as its security features are added.</p>
+                </div>
+            </div>
+
+            <div class="panel settings-panel">
+                <div class="setting-row">
+                    <div>
+                        <strong>Real-time directory monitoring</strong>
+                        <p>Monitor selected folders for filesystem changes.</p>
+                    </div>
+                    <label class="toggle">
+                        <input id="monitor-toggle" type="checkbox">
+                        <span></span>
+                    </label>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <strong>Scan on application startup</strong>
+                        <p>Request a scan when the application launches.</p>
+                    </div>
+                    <label class="toggle">
+                        <input id="startup-scan-toggle" type="checkbox">
+                        <span></span>
+                    </label>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <strong>Interface theme</strong>
+                        <p>Switch between dark and light appearance.</p>
+                    </div>
+                    <button id="settings-theme-toggle" class="secondary-btn">Change theme</button>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <strong>Excluded directories</strong>
+                        <p>Exclusions can cause threats in those locations to
+                            be missed. Add only directories you trust.</p>
+                    </div>
+                    <button id="exclusion-button" class="secondary-btn">Manage exclusions</button>
+                </div>
+
+                <p id="settings-message" class="footnote">
+                    Security settings are not connected to the backend yet.
+                </p>
+            </div>
+        </section>
+
+        <footer>
+            <span>PySentinel Desktop</span>
+            <span>Development build · Not a replacement for Windows Defender</span>
+        </footer>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
